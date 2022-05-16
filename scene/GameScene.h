@@ -44,7 +44,7 @@ class GameScene {
 
 	DebugCamera* debugCamera_ = nullptr;// デバッグカメラ
 
-	Vector3 start;
-	Vector3 end;
+	Vector3 start[102];
+	Vector3 end[102];
 	Vector4 color;
 };
