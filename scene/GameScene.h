@@ -10,6 +10,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "DebugCamera.h"
+#include <random>
 
 /// <summary>
 /// ゲームシーン
@@ -39,7 +40,7 @@ class GameScene {
 	uint32_t textureHandle_ = 0;// テクスチャハンドル
 	Model* model_ = nullptr;// 3Dモデル
 
-	WorldTransform worldTransform_;// ワールドトランスフォーム
+	WorldTransform worldTransforms_[100];// ワールドトランスフォーム
 	ViewProjection viewProjection_;// ビュープロジェクション
 
 	DebugCamera* debugCamera_ = nullptr;// デバッグカメラ
@@ -47,4 +48,6 @@ class GameScene {
 	Vector3 start[102];
 	Vector3 end[102];
 	Vector4 color;
+
+	float viewAngle = 0.0f;// カメラ上方向の角度
 };
