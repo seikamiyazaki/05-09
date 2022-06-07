@@ -90,3 +90,12 @@ Matrix4 MatWorldCreate(Vector3 scale, Vector3 rotation, Vector3 translation) {
 float Rad(float a) {
 	return (PI * a) / 180;
 }
+
+Vector3 VW(Vector3 vec, WorldTransform worldTransform)
+{
+	Vector3 a;
+	a.x = vec.x * worldTransform.matWorld_.m[0][0] + vec.y * worldTransform.matWorld_.m[1][0] + vec.z * worldTransform.matWorld_.m[2][0];
+	a.y = vec.x * worldTransform.matWorld_.m[0][1] + vec.y * worldTransform.matWorld_.m[1][1] + vec.z * worldTransform.matWorld_.m[2][1];
+	a.z = vec.x * worldTransform.matWorld_.m[0][2] + vec.y * worldTransform.matWorld_.m[1][2] + vec.z * worldTransform.matWorld_.m[2][2];
+	return a;
+}

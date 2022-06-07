@@ -26,3 +26,5 @@ Matrix4 MatTransCreate(Vector3 translation);
 Matrix4 MatWorldCreate(Vector3 scale, Vector3 rotation, Vector3 translation);
 
 float Rad(float a);
+
+Vector3 VW(Vector3 vec, WorldTransform world);
