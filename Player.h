@@ -13,7 +13,7 @@ class Player
 public:
 	Player();
 	~Player();
-	void Initilaize(Model* model, uint32_t textureHandle);//‰Šú‰»
+	void Initialize(Model* model, uint32_t textureHandle);//‰Šú‰»
 	void Update();// XV
 	void Draw(ViewProjection& viewProjection);// •`‰æ
 

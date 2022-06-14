@@ -1,7 +1,9 @@
 #pragma once
 #include "Matrix4.h"
-#include "WorldTransform.h"
 #include "AxisIndicator.h"
+#include "WorldTransform.h"
+#include "Model.h"
+#include "DebugText.h"
 
 #define PI 3.141592653589793
 

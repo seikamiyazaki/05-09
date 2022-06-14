@@ -1,7 +1,5 @@
 #pragma once
 #include "Function.h"
-#include "Model.h"
-#include "WorldTransform.h"
 
 class PlayerBullet
 {

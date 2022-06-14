@@ -14,7 +14,6 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	worldTransform_.Initialize();
 
 	worldTransform_.translation_ = position;
-
 	velocity_ = velocity;
 }
 
@@ -36,5 +35,5 @@ void PlayerBullet::Update()
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection)
 {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);// Ž©ƒLƒƒƒ‰‚Ì•`‰æ
+	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }

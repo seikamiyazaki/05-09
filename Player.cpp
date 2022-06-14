@@ -4,7 +4,7 @@
 Player::Player() {}
 Player::~Player() {}
 
-void Player::Initilaize(Model* model, uint32_t textureHandle)
+void Player::Initialize(Model* model, uint32_t textureHandle)
 {
 	assert(model);// NULLポインタチェック
 
