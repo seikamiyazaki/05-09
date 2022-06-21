@@ -33,7 +33,7 @@ void GameScene::Initialize()
 	player_ = new Player();
 	player_->Initialize(model_, textureHandle_);
 
-	Vector3 velocity(0, 0, 0.5f);
+	Vector3 velocity(0, 0, 0.2f);
 	enemy_ = new Enemy();
 	enemy_->Initialize(model_, velocity);
 
@@ -41,6 +41,9 @@ void GameScene::Initialize()
 	//newPlayer->Initialize(model_, textureHandle_);
 	//std::unique_ptr<Enemy> newEney = std::make_unique<Enemy>();
 	//newEney->Initialize(model_, position, velocity);
+
+	// 敵キャラに自キャラのアドレスを渡す
+	enemy_->SetPlayer(player_);
 }
 
 void GameScene::Update()

@@ -19,6 +19,9 @@ public:
 
 	void Attack();// 攻撃
 
+	// ワールド座標を取得
+	Vector3 GetWorldPosition();
+
 private:
 	WorldTransform worldTransform_;// ワールド変換データ
 	Model* model_ = nullptr;// モデル
