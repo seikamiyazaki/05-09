@@ -13,6 +13,7 @@
 #include <random>
 #include "Player.h"
 #include "Enemy.h"
+#include "Skydome.h"
 
 /// <summary>
 /// ゲームシーン
@@ -46,6 +47,10 @@ private: // メンバ変数
 	//std::list<std::unique_ptr<Enemy>> enemy_;
 	Player* player_ = nullptr;
 	Enemy* enemy_ = nullptr;
+	Skydome* skydome_ = nullptr;
+
+	// 3Dモデル
+	Model* modelSkydome_ = nullptr;
 
 public:
 	enum PartId {

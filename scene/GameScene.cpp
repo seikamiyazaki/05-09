@@ -10,6 +10,8 @@ GameScene::~GameScene()
 	delete model_;
 	delete player_;
 	delete enemy_;
+	delete skydome_;
+	delete modelSkydome_;
 }
 
 void GameScene::Initialize()
@@ -41,14 +43,22 @@ void GameScene::Initialize()
 	//std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
 	//newEnemy->Initialize(model_, velocity);
 
+	// 3Dモデルの生成
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	skydome_ = new Skydome();
+	skydome_->Intialize(modelSkydome_);
+	
 	// 敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
+
 }
 
 void GameScene::Update()
 {
-	player_->Update();// 自キャラの更新
+	player_->Update();// 更新
 	enemy_->Update();
+	skydome_->Update();
+
 	CheckAllCollision();
 
 	viewProjection_.UpdateMatrix();// 行列の再計算
@@ -81,6 +91,7 @@ void GameScene::Draw()
 
 	// ここに3Dオブジェクトの描画処理を追加できる
 	// 3Dモデル描画
+	skydome_->Draw(viewProjection_);
 	player_->Draw(viewProjection_);
 	enemy_->Draw(viewProjection_);
 
