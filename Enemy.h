@@ -25,6 +25,11 @@ public:
 	// ワールド座標を取得
 	Vector3 GetWorldPosition();
 
+	// 衝突を検出したら呼び出されるコールバック関数
+	void OnCollision();
+	// 弾リストを取得
+	const std::list<std::unique_ptr<EnemyBullet>>& GetBullets() { return enemyBullet_; }
+
 private:
 	WorldTransform worldTransform_;
 	DebugText* debugText_ = nullptr;
@@ -42,7 +47,7 @@ private:
 	std::list<std::unique_ptr<EnemyBullet>> enemyBullet_;// 弾
 
 	// 発射タイマー
-	int32_t kFireTimer = 0;
-
+	int32_t kFireTimer = kFireInteral;
+	// 自キャラ
 	Player* player_ = nullptr;
 };

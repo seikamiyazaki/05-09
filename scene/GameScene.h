@@ -26,6 +26,9 @@ public: // メンバ関数
 	void Update();// 毎フレーム処理
 	void Draw();// 描画
 
+	// 衝突判定と応答
+	void CheckAllCollision();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;

@@ -1,20 +1,26 @@
 ﻿#pragma once
+#include<cmath>
 
 /// <summary>
 /// 3次元ベクトル
 /// </summary>
 class Vector3 {
-  public:
+public:
 	float x; // x成分
 	float y; // y成分
 	float z; // z成分
 
-  public:
+public:
 
 	// コンストラクタ
 	Vector3();                          // 零ベクトルとする
 	Vector3(float x, float y, float z); // x成分, y成分, z成分 を指定しての生成
-	  
+
+	float length() const; // ベクトルの長さを求める
+
+	// ベクトルを正規化にする
+	Vector3& normalize();
+
 	// 単項演算子オーバーロード
 	Vector3 operator+() const;
 	Vector3 operator-() const;

@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include <cassert>
+#include "Player.h"
 
 Enemy::Enemy() {}
 Enemy::~Enemy() {}
@@ -15,7 +16,7 @@ void Enemy::Initialize(Model* model, const Vector3& velocity)
 
 	worldTransform_.Initialize();
 
-	worldTransform_.translation_ = { 0.0f,2.0f,20.0f };
+	worldTransform_.translation_ = { 10.0f,2.0f,20.0f };
 	velocity_ = velocity;
 
 	// 接近フェーズ初期化
@@ -30,9 +31,9 @@ void Enemy::Update()
 		// 移動ベクトル
 		worldTransform_.translation_ += Vector3(0.0f, 0.0f, -0.1f);
 		// 規定の位置に到達したら離脱
-		if (worldTransform_.translation_.z < 0.0f) {
-			phase_ = Phase::Leave;
-		}
+		//if (worldTransform_.translation_.z < 0.0f) {
+		//	phase_ = Phase::Leave;
+		//}
 		ApproachInitialize();
 		break;
 	case Phase::Leave:
@@ -71,7 +72,16 @@ void Enemy::Fire()
 {
 	// 弾の速度
 	const float kBulletSpeed = 1.0f;
-	Vector3 velocity(0, 0, kBulletSpeed);
+	// 座標の取得
+	Vector3 playerPos = player_->GetWorldPosition();
+	Vector3 enemyPos = this->GetWorldPosition();
+	// 差分ベクトル = ゴール地点 - スタート地点
+	Vector3 velocity = playerPos;
+	velocity -= enemyPos;
+	// ベクトルの正規化
+	velocity.normalize();
+	// ベクトルの長さを、早さに合わせる
+	velocity *= kBulletSpeed;
 	// 速度ベクトルを自機の向きに合わせて回転させる
 	velocity = VW(velocity, worldTransform_);
 	// 弾を発生し、初期化
@@ -104,4 +114,8 @@ Vector3 Enemy::GetWorldPosition()
 	worldPos.z = worldTransform_.translation_.z;
 
 	return worldPos;
+}
+
+void Enemy::OnCollision()
+{
 }

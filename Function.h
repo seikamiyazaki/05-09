@@ -30,3 +30,7 @@ Matrix4 MatWorldCreate(Vector3 scale, Vector3 rotation, Vector3 translation);
 float Rad(float a);
 
 Vector3 VW(Vector3 vec, WorldTransform world);
+
+float Length(Vector3 a);
+
+Vector3 Normalize(Vector3 a);

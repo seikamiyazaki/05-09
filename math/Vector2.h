@@ -4,11 +4,11 @@
 /// 2次元ベクトル
 /// </summary>
 class Vector2 {
-  public:
+public:
 	float x; // x成分
 	float y; // y成分
 
-  public:
+public:
 	// コンストラクタ
 	Vector2();                          // 零ベクトルとする
 	Vector2(float x, float y); // x成分, y成分 を指定しての生成

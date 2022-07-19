@@ -32,15 +32,14 @@ void GameScene::Initialize()
 
 	player_ = new Player();
 	player_->Initialize(model_, textureHandle_);
+	//std::unique_ptr<Player> newPlayer = std::make_unique<Player>();
+	//newPlayer->Initialize(model_, textureHandle_);
 
 	Vector3 velocity(0, 0, 0.2f);
 	enemy_ = new Enemy();
 	enemy_->Initialize(model_, velocity);
-
-	//std::unique_ptr<Player> newPlayer = std::make_unique<Player>();
-	//newPlayer->Initialize(model_, textureHandle_);
-	//std::unique_ptr<Enemy> newEney = std::make_unique<Enemy>();
-	//newEney->Initialize(model_, position, velocity);
+	//std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
+	//newEnemy->Initialize(model_, velocity);
 
 	// 敵キャラに自キャラのアドレスを渡す
 	enemy_->SetPlayer(player_);
@@ -102,5 +101,43 @@ void GameScene::Draw()
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
+#pragma endregion
+}
+
+void GameScene::CheckAllCollision()
+{
+	// 判定対象AとBの座標
+	Vector3 posA, posB;
+	// 自弾リストの取得
+	const std::list<std::unique_ptr<PlayerBullet>>& playerBullet = player_->GetBullets();
+	// 敵弾リストの取得
+	const std::list<std::unique_ptr<EnemyBullet>>& enemyBullet = enemy_->GetBullets();
+
+#pragma region 自キャラと敵弾の当たり判定
+	// 自キャラのワールド座標
+	posA = player_->GetWorldPosition();
+	// 自キャラと敵弾全ての当たり判定
+	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullet) {
+		// 敵弾の座標
+		posB = bullet->GetWorldPosition();
+		int pos;
+		pos = ((posB.x - posA.x) * (posB.x - posA.x)) + ((posB.y + posA.y) * (posB.y + posA.y)) + ((posB.z - posA.z) * (posB.z - posA.z));
+		int rA;
+		int rB;
+		rA = (posA.x + 64) / 2;
+		rB = (posB.x + 64) / 2;
+		// 球と球の交差判定
+		if (pos <= (rA + rB) * (rA + rB)) {
+			// 衝突時コールバックを呼び出す
+			player_->OnCollision();
+			bullet->OnCollision();
+		}
+	}
+#pragma endregion
+
+#pragma region 自弾と敵キャラの当たり判定
+#pragma endregion
+
+#pragma region 自弾と敵弾の当たり判定
 #pragma endregion
 }
