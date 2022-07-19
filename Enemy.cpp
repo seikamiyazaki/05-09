@@ -28,25 +28,30 @@ void Enemy::Update()
 	switch (phase_)
 	{
 	case Phase::Approach:
-		// 移動ベクトル
-		worldTransform_.translation_ += Vector3(0.0f, 0.0f, -0.1f);
-		// 規定の位置に到達したら離脱
+		//// 移動ベクトル
+		//worldTransform_.translation_ += Vector3(0.0f, 0.0f, -0.1f);
+		//// 規定の位置に到達したら離脱
 		//if (worldTransform_.translation_.z < 0.0f) {
 		//	phase_ = Phase::Leave;
 		//}
 		ApproachInitialize();
 		break;
-	case Phase::Leave:
-		// 移動ベクトル
-		worldTransform_.translation_ += Vector3(-0.1f, 0.1f, 0);
-		break;
+	//case Phase::Leave:
+	//	// 移動ベクトル
+	//	worldTransform_.translation_ += Vector3(-0.1f, 0.1f, 0);
+	//	break;
 	}
+
+	// デスフラグの立った弾を削除
+	enemyBullet_.remove_if([](std::unique_ptr<EnemyBullet>& bullet) {
+		return bullet->IsDead();
+		});
 
 	for (std::unique_ptr<EnemyBullet>& enemyBullet : enemyBullet_) {
 		enemyBullet->Update();
 	}
 
-	worldTransform_.translation_ -= velocity_;
+	//worldTransform_.translation_ -= velocity_;
 
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
 	worldTransform_.matWorld_ *= MatRotYCreate1(worldTransform_.rotation_);

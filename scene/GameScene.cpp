@@ -49,6 +49,7 @@ void GameScene::Update()
 {
 	player_->Update();// 自キャラの更新
 	enemy_->Update();
+	CheckAllCollision();
 
 	viewProjection_.UpdateMatrix();// 行列の再計算
 
@@ -120,14 +121,17 @@ void GameScene::CheckAllCollision()
 	for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullet) {
 		// 敵弾の座標
 		posB = bullet->GetWorldPosition();
-		int pos;
-		pos = ((posB.x - posA.x) * (posB.x - posA.x)) + ((posB.y + posA.y) * (posB.y + posA.y)) + ((posB.z - posA.z) * (posB.z - posA.z));
-		int rA;
-		int rB;
-		rA = (posA.x + 64) / 2;
-		rB = (posB.x + 64) / 2;
+		// 座標AとBの距離を求める
+		float dx = ((posB.x - posA.x) * (posB.x - posA.x));
+		float dy = ((posB.y - posA.y) * (posB.y - posA.y));
+		float dz = ((posB.z - posA.z) * (posB.z - posA.z));
+		float dist = dx + dy + dz;
+		float rA = 2.0f;
+		float rB = 2.0f;
+		float L = (rA + rB) * (rA + rB);
+
 		// 球と球の交差判定
-		if (pos <= (rA + rB) * (rA + rB)) {
+		if (dist <= L) {
 			// 衝突時コールバックを呼び出す
 			player_->OnCollision();
 			bullet->OnCollision();
@@ -136,8 +140,53 @@ void GameScene::CheckAllCollision()
 #pragma endregion
 
 #pragma region 自弾と敵キャラの当たり判定
+	// 自キャラのワールド座標
+	posA = enemy_->GetWorldPosition();
+	// 自キャラと敵弾全ての当たり判定
+	for (const std::unique_ptr<PlayerBullet>& bullet : playerBullet) {
+		// 敵弾の座標
+		posB = bullet->GetWorldPosition();
+		// 座標AとBの距離を求める
+		float dx = ((posB.x - posA.x) * (posB.x - posA.x));
+		float dy = ((posB.y - posA.y) * (posB.y - posA.y));
+		float dz = ((posB.z - posA.z) * (posB.z - posA.z));
+		float dist = dx + dy + dz;
+		float rA = 2.0f;
+		float rB = 2.0f;
+		float L = (rA + rB) * (rA + rB);
+
+		// 球と球の交差判定
+		if (dist <= L) {
+			// 衝突時コールバックを呼び出す
+			enemy_->OnCollision();
+			bullet->OnCollision();
+		}
+	}
 #pragma endregion
 
 #pragma region 自弾と敵弾の当たり判定
+	// 自キャラと敵弾全ての当たり判定
+	for (const std::unique_ptr<PlayerBullet>& bullets : playerBullet) {
+		for (const std::unique_ptr<EnemyBullet>& bullet : enemyBullet) {
+			// 敵弾の座標
+			posA = bullets->GetWorldPosition();
+			posB = bullet->GetWorldPosition();
+			// 座標AとBの距離を求める
+			float dx = ((posB.x - posA.x) * (posB.x - posA.x));
+			float dy = ((posB.y - posA.y) * (posB.y - posA.y));
+			float dz = ((posB.z - posA.z) * (posB.z - posA.z));
+			float dist = dx + dy + dz;
+			float rA = 2.0f;
+			float rB = 2.0f;
+			float L = (rA + rB) * (rA + rB);
+
+			// 球と球の交差判定
+			if (dist <= L) {
+				// 衝突時コールバックを呼び出す
+				bullets->OnCollision();
+				bullet->OnCollision();
+			}
+		}
+	}
 #pragma endregion
 }
