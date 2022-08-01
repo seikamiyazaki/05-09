@@ -8,8 +8,6 @@ GameScene::GameScene() {}
 GameScene::~GameScene()
 {
 	delete model_;
-	delete player_;
-	delete enemy_;
 	delete skydome_;
 	delete modelSkydome_;
 }
@@ -20,48 +18,55 @@ void GameScene::Initialize()
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	debugText_ = DebugText::GetInstance();
-	textureHandle_ = TextureManager::Load("mario.jpg");// ファイルを指定してテクスチャを読み込む
-	model_ = Model::Create();// 3Dモデルの生成
-
-	viewProjection_.Initialize();// ビュープロジェクションの初期化
-
-	//debugCamera_ = new DebugCamera(50, 50);// デバッグカメラの生成
-	AxisIndicator::GetInstance()->SetVisible(true);// 軸方向表示を有効にする
+	// ファイルを指定してテクスチャを読み込む
+	textureHandle_ = TextureManager::Load("mario.jpg");
+	// 3Dモデルの生成
+	model_ = Model::Create();
+	// ビュープロジェクションの初期化
+	viewProjection_.Initialize();
+	// 軸方向表示を有効にする
+	AxisIndicator::GetInstance()->SetVisible(true);
 	// 軸方向表示が参照するビュープロジェクションを指定（アドレス渡し）
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 	// ライン描画が参照するビュープロジェクションを指定（アドレス渡し）
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
 
-	player_ = new Player();
-	player_->Initialize(model_, textureHandle_);
-	//std::unique_ptr<Player> newPlayer = std::make_unique<Player>();
-	//newPlayer->Initialize(model_, textureHandle_);
+	// レールカメラの生成
+	railCamera_ = std::make_unique<RailCamera>();
+	railCamera_->Initialize(Vector3(0, 0, -50), Vector3(0, 0, 0));
 
+	// プレイヤー
+	player_ = std::make_unique<Player>();
+	player_->Initialize(model_, textureHandle_);
+	player_->SetParent(railCamera_->GetWorldTransform());
+	
+	// エネミー
 	Vector3 velocity(0, 0, 0.2f);
-	enemy_ = new Enemy();
+	enemy_ = std::make_unique<Enemy>();
 	enemy_->Initialize(model_, velocity);
-	//std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
-	//newEnemy->Initialize(model_, velocity);
+	// 敵キャラに自キャラのアドレスを渡す
+	enemy_->SetPlayer(player_.get());
 
 	// 3Dモデルの生成
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = new Skydome();
 	skydome_->Intialize(modelSkydome_);
-	
-	// 敵キャラに自キャラのアドレスを渡す
-	enemy_->SetPlayer(player_);
-
 }
 
 void GameScene::Update()
 {
-	player_->Update();// 更新
+	railCamera_->Update();
+	// railCmara_をゲームシーンのカメラに適応する
+	viewProjection_.matView = railCamera_->GetViewProjection().matView;
+	viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+	// 転送
+	viewProjection_.TransferMatrix();
+
+	player_->Update();
 	enemy_->Update();
 	skydome_->Update();
 
 	CheckAllCollision();
-
-	viewProjection_.UpdateMatrix();// 行列の再計算
 
 	// デバッグ用表示
 	debugText_->SetPos(50, 50);

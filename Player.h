@@ -7,6 +7,7 @@
 #include "PlayerBullet.h"
 #include <memory>
 #include<list>
+#include "RailCamera.h"
 
 class Player
 {
@@ -27,6 +28,8 @@ public:
 	// 弾リストを取得
 	const std::list<std::unique_ptr<PlayerBullet>>& GetBullets() { return bullets_; }
 
+	void SetParent(WorldTransform* worldTransform) { worldTransform_.parent_ = worldTransform; }
+
 private:
 	WorldTransform worldTransform_;// ワールド変換データ
 	Model* model_ = nullptr;// モデル
@@ -36,4 +39,5 @@ private:
 	DebugText* debugText_ = nullptr;
 
 	std::list<std::unique_ptr<PlayerBullet>> bullets_;// 弾
+	RailCamera* railCamera_ = nullptr;
 };

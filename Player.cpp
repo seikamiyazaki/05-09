@@ -2,7 +2,10 @@
 #include <cassert>
 
 Player::Player() {}
-Player::~Player() {}
+Player::~Player() 
+{
+	delete railCamera_;
+}
 
 void Player::Initialize(Model* model, uint32_t textureHandle)
 {
@@ -15,6 +18,10 @@ void Player::Initialize(Model* model, uint32_t textureHandle)
 	input_ = Input::GetInstance();
 	debugText_ = DebugText::GetInstance();
 
+	worldTransform_.translation_ = { 0.0f,0.0f,50.0f };
+
+	railCamera_ = new RailCamera;
+
 	worldTransform_.Initialize();
 }
 
@@ -23,7 +30,7 @@ void Player::Update()
 	// デスフラグの立った弾を削除
 	bullets_.remove_if([](std::unique_ptr<PlayerBullet>& bullet) {
 		return bullet->IsDead();
-	});
+		});
 
 	Vector3 move = { 0,0,0 };// キャラクターの移動ベクトル
 
@@ -69,6 +76,10 @@ void Player::Update()
 	worldTransform_.matWorld_ *= MatRotYCreate1(worldTransform_.rotation_);
 	worldTransform_.matWorld_ *= MatTransCreate(worldTransform_.translation_);
 
+	// 親子
+	worldTransform_.matWorld_ = MatWorldCreate(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+	worldTransform_.matWorld_ *= worldTransform_.parent_->matWorld_;
+
 	worldTransform_.TransferMatrix();
 
 	// デバッグ用表示
@@ -92,10 +103,10 @@ void Player::Attack()
 		const float kBulletSpeed = 1.0f;
 		Vector3 velocity(0, 0, kBulletSpeed);
 		// 速度ベクトルを自機の向きに合わせて回転させる
-		velocity = VW(velocity, worldTransform_);
+		velocity = Vector3TransformNormal(velocity, worldTransform_);
 		// 弾を発生し、初期化
 		std::unique_ptr<PlayerBullet> newBullet = std::make_unique<PlayerBullet>();
-		newBullet->Initialize(model_, worldTransform_.translation_, velocity);
+		newBullet->Initialize(model_, GetWorldPosition(), velocity);
 		// 弾を登録する
 		bullets_.push_back(std::move(newBullet));
 	}
@@ -106,9 +117,9 @@ Vector3 Player::GetWorldPosition()
 	// ワールド座標を入れる変数
 	Vector3 worldPos;
 	// ワールド行列の平行移動成分を取得
-	worldPos.x = worldTransform_.translation_.x;
-	worldPos.y = worldTransform_.translation_.y;
-	worldPos.z = worldTransform_.translation_.z;
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
 
 	return worldPos;
 }

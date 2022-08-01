@@ -16,8 +16,8 @@ public:
 	Vector3();                          // 零ベクトルとする
 	Vector3(float x, float y, float z); // x成分, y成分, z成分 を指定しての生成
 
-	float length() const; // ベクトルの長さを求める
-
+	// ベクトルの長さを求める
+	float length() const;
 	// ベクトルを正規化にする
 	Vector3& normalize();
 

@@ -27,6 +27,7 @@ void PlayerBullet::Update()
 	}
 
 	worldTransform_.matWorld_ = MathUtility::Matrix4Identity();
+	worldTransform_.matWorld_ = MatScaleCreate(worldTransform_.scale_);
 	worldTransform_.matWorld_ *= MatRotYCreate1(worldTransform_.rotation_);
 	worldTransform_.matWorld_ *= MatTransCreate(worldTransform_.translation_);
 

@@ -16,7 +16,7 @@ void Enemy::Initialize(Model* model, const Vector3& velocity)
 
 	worldTransform_.Initialize();
 
-	worldTransform_.translation_ = { 10.0f,2.0f,20.0f };
+	worldTransform_.translation_ = { 30.0f,2.0f,100.0f };
 	velocity_ = velocity;
 
 	// 接近フェーズ初期化
@@ -88,7 +88,7 @@ void Enemy::Fire()
 	// ベクトルの長さを、早さに合わせる
 	velocity *= kBulletSpeed;
 	// 速度ベクトルを自機の向きに合わせて回転させる
-	velocity = VW(velocity, worldTransform_);
+	velocity = Vector3TransformNormal(velocity, worldTransform_);
 	// 弾を発生し、初期化
 	std::unique_ptr<EnemyBullet> newEnemyBullet = std::make_unique<EnemyBullet>();
 	newEnemyBullet->Initialize(model_, worldTransform_.translation_, velocity);

@@ -14,6 +14,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Skydome.h"
+#include "RailCamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -43,26 +44,9 @@ private: // メンバ変数
 
 	float viewAngle = 0.0f;// カメラ上方向の角度
 
-	//std::list<std::unique_ptr<Player>> player_;
-	//std::list<std::unique_ptr<Enemy>> enemy_;
-	Player* player_ = nullptr;
-	Enemy* enemy_ = nullptr;
+	std::unique_ptr<Player> player_;
+	std::unique_ptr<Enemy> enemy_;
 	Skydome* skydome_ = nullptr;
-
-	// 3Dモデル
 	Model* modelSkydome_ = nullptr;
-
-public:
-	enum PartId {
-		kRoot,
-		kSpine,
-		kChest,
-		kHead,
-		kArmL,
-		kArmR,
-		kHip,
-		kLegL,
-		kLegR,
-		kNumPartId
-	};
+	std::unique_ptr<RailCamera> railCamera_;
 };

@@ -91,7 +91,7 @@ float Rad(float a) {
 	return (PI * a) / 180;
 }
 
-Vector3 VW(Vector3 vec, WorldTransform worldTransform)
+Vector3 Vector3TransformNormal(Vector3 vec, WorldTransform worldTransform)
 {
 	Vector3 a;
 	a.x = vec.x * worldTransform.matWorld_.m[0][0] + vec.y * worldTransform.matWorld_.m[1][0] + vec.z * worldTransform.matWorld_.m[2][0];
